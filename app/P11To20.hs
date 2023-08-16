@@ -1,4 +1,6 @@
-module P11To20 (encode, decode, encodeDirect, duplicate) where
+{-# OPTIONS_GHC -fwarn-incomplete-patterns #-}
+
+module P11To20 (encode, decode, encodeDirect, duplicate, P11To20.replicate) where
 
 import P1To10 (rev)
 
@@ -72,5 +74,21 @@ duplicate xs = rev $ duplicateAux xs []
   where
     duplicateAux [] acc = acc
     duplicateAux (x : xs) acc = duplicateAux xs $ x : x : acc
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+-- Problem 15:
+-- Description:
+--    Replicate the elements of a list a given number of times.
+-- Solution:
+replicate xs n = rev $ replicateAux xs n []
+  where
+    globalTimes = n
+
+    replicateAux [] _ acc = acc
+    replicateAux (x : xs) currentTimes acc
+      | globalTimes <= 0 = []
+      | currentTimes <= 0 = replicateAux xs globalTimes acc
+      | otherwise = replicateAux (x : xs) (currentTimes - 1) $ x : acc
 
 ----------------------------------------------------------------------------------------------------------------------------------
