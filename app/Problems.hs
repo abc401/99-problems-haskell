@@ -22,6 +22,7 @@ module Problems
     rotate,
     removeAt,
     insertAt,
+    range,
   )
 where
 
@@ -335,5 +336,21 @@ insertAt x idx xs
     insertAtAux _idx (_x : _xs) acc
       | _idx == idx = insertAtAux (_idx + 1) _xs $ _x : x : acc
       | otherwise = insertAtAux (_idx + 1) _xs $ _x : acc
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+-- Problem 22:
+-- Description:
+--    Create a list containing all integers within a given range.
+-- Solution:
+range :: (Ord a, Num a) => a -> a -> [a]
+range bound1 bound2 = rangeAux bound1 bound2 []
+  where
+    delta
+      | bound1 > bound2 = 1
+      | otherwise = -1
+    rangeAux bound1' bound2' acc
+      | bound1' == bound2' - delta = acc
+      | otherwise = rangeAux bound1' (bound2' + delta) $ bound2' : acc
 
 ----------------------------------------------------------------------------------------------------------------------------------
