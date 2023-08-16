@@ -21,11 +21,11 @@ module Problems
     slice,
     rotate,
     removeAt,
+    insertAt,
   )
 where
 
-----------------------------------------------------------------------------------------------------------------------------------
--- Problem 1:
+------------------------------------------------------------------------------------------------------------------------------------ Problem 1:
 -- Description:
 --    Find the last element of a generic list
 -- Solution:
@@ -317,5 +317,23 @@ removeAt idx xs = rev $ removeAtAux idx xs []
     removeAtAux _idx (x : _xs) acc
       | _idx == 0 = removeAtAux (_idx - 1) _xs acc
       | otherwise = removeAtAux (_idx - 1) _xs $ x : acc
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+-- Problem 21:
+-- Description:
+--    Insert an element at a given position into a list.
+-- Solution:
+insertAt :: (Ord idx, Num idx) => p -> idx -> [p] -> [p]
+insertAt x idx xs
+  | idx >= 0 = rev $ insertAtAux 0 xs []
+  | otherwise = error "Cannot insert at negative index!"
+  where
+    insertAtAux _idx [] acc
+      | _idx <= idx = x : acc
+      | otherwise = acc
+    insertAtAux _idx (_x : _xs) acc
+      | _idx == idx = insertAtAux (_idx + 1) _xs $ _x : x : acc
+      | otherwise = insertAtAux (_idx + 1) _xs $ _x : acc
 
 ----------------------------------------------------------------------------------------------------------------------------------
