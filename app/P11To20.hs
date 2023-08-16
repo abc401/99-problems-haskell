@@ -1,4 +1,4 @@
-module P11To20 (encode) where
+module P11To20 (encode, decode) where
 
 import P1To10 (rev)
 
@@ -25,5 +25,22 @@ encode (x : xs) = P1To10.rev $ encodeAux xs (One x) []
     encodeAux (x : xs) (Many (n, x')) acc
       | x == x' = encodeAux xs (Many (n + 1, x')) acc
       | otherwise = encodeAux xs (One x) (Many (n, x') : acc)
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+-- Problem 12:
+-- Description:
+--    Decode a Run-length encoded list
+-- Solution:
+decode :: [Rle a] -> [a]
+decode [] = []
+decode xs = rev $ decodeAux xs []
+  where
+    decodeAux [] acc = acc
+    decodeAux (One x : xs) acc = decodeAux xs (x : acc)
+    decodeAux (Many (n, x) : xs) acc = decodeAux xs $ repeat x n acc
+
+    repeat x 0 acc = acc
+    repeat x n acc = repeat x (n - 1) (x : acc)
 
 ----------------------------------------------------------------------------------------------------------------------------------
