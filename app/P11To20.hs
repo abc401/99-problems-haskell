@@ -1,4 +1,4 @@
-module P11To20 (encode, decode, encodeDirect) where
+module P11To20 (encode, decode, encodeDirect, duplicate) where
 
 import P1To10 (rev)
 
@@ -60,5 +60,17 @@ encodeDirect (x : xs) = rev $ encodeDirectAux xs (One x) []
     encodeDirectAux (x : xs) (Many (n, x')) acc
       | x == x' = encodeDirectAux xs (Many (n + 1, x')) acc
       | otherwise = encodeDirectAux xs (One x) $ Many (n, x') : acc
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+-- Problem 14:
+-- Description:
+--    Duplicate the elements of a list
+-- Solution:
+duplicate :: [a] -> [a]
+duplicate xs = rev $ duplicateAux xs []
+  where
+    duplicateAux [] acc = acc
+    duplicateAux (x : xs) acc = duplicateAux xs $ x : x : acc
 
 ----------------------------------------------------------------------------------------------------------------------------------
