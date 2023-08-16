@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wall #-}
 
-module P11To20 (encode, decode, encodeDirect, duplicate, P11To20.replicate, P11To20.drop, split) where
+module P11To20 (encode, slice, decode, encodeDirect, duplicate, P11To20.replicate, P11To20.drop, split) where
 
 import P1To10 (rev)
 
@@ -119,5 +119,20 @@ split xs size = splitAux xs 1 []
     splitAux (x : _xs) currentSize acc
       | currentSize == size = (rev $ x : acc, _xs)
       | otherwise = splitAux _xs (currentSize + 1) $ x : acc
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+-- Problem 18:
+-- Description:
+--     Extract a slice from a list.
+-- Solution:
+slice :: (Ord p, Num p) => [a] -> p -> p -> [a]
+slice xs lowerBound upperBound = rev $ sliceAux xs 0 []
+  where
+    sliceAux [] _ acc = acc
+    sliceAux (x : _xs) currentIdx acc
+      | currentIdx < lowerBound = sliceAux _xs (currentIdx + 1) acc
+      | currentIdx > upperBound = acc
+      | otherwise = sliceAux _xs (currentIdx + 1) $ x : acc
 
 ----------------------------------------------------------------------------------------------------------------------------------
