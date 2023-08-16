@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wall #-}
+
 module P1To10 (P1To10.last, lastTwo, at, P1To10.length, rev, isPalindrome, flatten, compress, pack, encode) where
 
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -8,7 +10,7 @@ module P1To10 (P1To10.last, lastTwo, at, P1To10.length, rev, isPalindrome, flatt
 -- Solution:
 last :: [a] -> Maybe a
 last [] = Nothing
-last [x] = Just x
+-- last [x] = Just x
 last (_ : xs) = P1To10.last xs
 
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -21,7 +23,7 @@ lastTwo :: [b] -> Maybe (b, b)
 lastTwo [] = Nothing
 lastTwo [_] = Nothing
 lastTwo [x, y] = Just (x, y)
-lastTwo (x : xs) = lastTwo xs
+lastTwo (_ : xs) = lastTwo xs
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -45,7 +47,7 @@ at n (_ : xs)
 length :: [a] -> Integer
 length xs = lengthAux xs 0
   where
-    lengthAux (_ : xs) n = lengthAux xs (n + 1)
+    lengthAux (_ : _xs) n = lengthAux _xs (n + 1)
     lengthAux [] n = n
 
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -58,7 +60,7 @@ rev :: [a] -> [a]
 rev xs = revAux xs []
   where
     revAux [] acc = acc
-    revAux (x : xs) acc = revAux xs (x : acc)
+    revAux (x : _xs) acc = revAux _xs (x : acc)
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -70,9 +72,9 @@ isPalindrome :: (Eq a) => [a] -> Bool
 isPalindrome xs = isPalindromeAux xs (rev xs)
   where
     isPalindromeAux [] [] = True
-    isPalindromeAux (x : xs) (r : rs)
-      | x == r = isPalindromeAux xs rs
-      | otherwise = False
+    isPalindromeAux (x : _xs) (r : rs)
+      | x == r = isPalindromeAux _xs rs
+    isPalindromeAux _ _ = False
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -87,7 +89,7 @@ flatten :: [Node a] -> [a]
 flatten xs = rev (flattenAux xs [])
   where
     flattenAux [] acc = acc
-    flattenAux (One x : xs) acc = flattenAux xs (x : acc)
+    flattenAux (One x : _xs) acc = flattenAux _xs (x : acc)
     flattenAux (Many xs1 : xs2) acc = flattenAux xs2 (flattenAux xs1 acc)
 
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -101,9 +103,9 @@ compress xs = rev (compressAux xs [])
   where
     compressAux [] acc = acc
     compressAux [x] acc = x : acc
-    compressAux (x : y : xs) acc
-      | x == y = compressAux xs (x : acc)
-      | otherwise = compressAux xs (x : y : acc)
+    compressAux (x : y : _xs) acc
+      | x == y = compressAux _xs (x : acc)
+      | otherwise = compressAux _xs (x : y : acc)
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -115,10 +117,10 @@ pack :: (Eq a) => [a] -> [[a]]
 pack xs = rev (packAux xs [] [])
   where
     packAux [] xsAcc totalAcc = xsAcc : totalAcc
-    packAux (x : xs) [] totalAcc = packAux xs [x] totalAcc
-    packAux (x : xs) (xAcc : xsAcc) totalAcc
-      | x == xAcc = packAux xs (x : xAcc : xsAcc) totalAcc
-      | otherwise = packAux xs [x] ((xAcc : xsAcc) : totalAcc)
+    packAux (x : _xs) [] totalAcc = packAux _xs [x] totalAcc
+    packAux (x : _xs) (xAcc : xsAcc) totalAcc
+      | x == xAcc = packAux _xs (x : xAcc : xsAcc) totalAcc
+      | otherwise = packAux _xs [x] ((xAcc : xsAcc) : totalAcc)
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -131,8 +133,8 @@ encode [] = []
 encode (x : xs) = rev $ encodeAux xs (1, x) []
   where
     encodeAux [] (n, x') acc = (n, x') : acc
-    encodeAux (x : xs) (n, x') acc
-      | x == x' = encodeAux xs (n + 1, x') acc
-      | otherwise = encodeAux xs (1, x) $ (n, x') : acc
+    encodeAux (_x : _xs) (n, x') acc
+      | _x == x' = encodeAux _xs (n + 1, x') acc
+      | otherwise = encodeAux _xs (1, _x) $ (n, x') : acc
 
 ----------------------------------------------------------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
-{-# OPTIONS_GHC -fwarn-incomplete-patterns #-}
+{-# OPTIONS_GHC -Wall #-}
 
-module P11To20 (encode, decode, encodeDirect, duplicate, P11To20.replicate) where
+module P11To20 (encode, decode, encodeDirect, duplicate, P11To20.replicate, P11To20.drop) where
 
 import P1To10 (rev)
 
@@ -21,12 +21,12 @@ encode [] = []
 encode (x : xs) = P1To10.rev $ encodeAux xs (One x) []
   where
     encodeAux [] rle acc = rle : acc
-    encodeAux (x : xs) (One x') acc
-      | x == x' = encodeAux xs (Many (2, x')) acc
-      | otherwise = encodeAux xs (One x) (One x' : acc)
-    encodeAux (x : xs) (Many (n, x')) acc
-      | x == x' = encodeAux xs (Many (n + 1, x')) acc
-      | otherwise = encodeAux xs (One x) (Many (n, x') : acc)
+    encodeAux (_x : _xs) (One x') acc
+      | _x == x' = encodeAux _xs (Many (2, x')) acc
+      | otherwise = encodeAux _xs (One _x) (One x' : acc)
+    encodeAux (_x : _xs) (Many (n, x')) acc
+      | _x == x' = encodeAux _xs (Many (n + 1, x')) acc
+      | otherwise = encodeAux _xs (One _x) (Many (n, x') : acc)
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -39,11 +39,11 @@ decode [] = []
 decode xs = rev $ decodeAux xs []
   where
     decodeAux [] acc = acc
-    decodeAux (One x : xs) acc = decodeAux xs (x : acc)
-    decodeAux (Many (n, x) : xs) acc = decodeAux xs $ repeat x n acc
+    decodeAux (One x : _xs) acc = decodeAux _xs (x : acc)
+    decodeAux (Many (n, x) : _xs) acc = decodeAux _xs $ _repeat x n acc
 
-    repeat x 0 acc = acc
-    repeat x n acc = repeat x (n - 1) (x : acc)
+    _repeat _ 0 acc = acc
+    _repeat x n acc = _repeat x (n - 1) (x : acc)
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -56,12 +56,12 @@ encodeDirect [] = []
 encodeDirect (x : xs) = rev $ encodeDirectAux xs (One x) []
   where
     encodeDirectAux [] rle acc = rle : acc
-    encodeDirectAux (x : xs) (One x') acc
-      | x == x' = encodeDirectAux xs (Many (2, x')) acc
-      | otherwise = encodeDirectAux xs (One x) $ One x' : acc
-    encodeDirectAux (x : xs) (Many (n, x')) acc
-      | x == x' = encodeDirectAux xs (Many (n + 1, x')) acc
-      | otherwise = encodeDirectAux xs (One x) $ Many (n, x') : acc
+    encodeDirectAux (_x : _xs) (One x') acc
+      | _x == x' = encodeDirectAux _xs (Many (2, x')) acc
+      | otherwise = encodeDirectAux _xs (One _x) $ One x' : acc
+    encodeDirectAux (_x : _xs) (Many (n, x')) acc
+      | _x == x' = encodeDirectAux _xs (Many (n + 1, x')) acc
+      | otherwise = encodeDirectAux _xs (One _x) $ Many (n, x') : acc
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -73,7 +73,7 @@ duplicate :: [a] -> [a]
 duplicate xs = rev $ duplicateAux xs []
   where
     duplicateAux [] acc = acc
-    duplicateAux (x : xs) acc = duplicateAux xs $ x : x : acc
+    duplicateAux (x : _xs) acc = duplicateAux _xs $ x : x : acc
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -81,14 +81,29 @@ duplicate xs = rev $ duplicateAux xs []
 -- Description:
 --    Replicate the elements of a list a given number of times.
 -- Solution:
+replicate :: (Ord p, Num p) => [a] -> p -> [a]
 replicate xs n = rev $ replicateAux xs n []
   where
     globalTimes = n
 
     replicateAux [] _ acc = acc
-    replicateAux (x : xs) currentTimes acc
+    replicateAux (x : _xs) currentTimes acc
       | globalTimes <= 0 = []
-      | currentTimes <= 0 = replicateAux xs globalTimes acc
-      | otherwise = replicateAux (x : xs) (currentTimes - 1) $ x : acc
+      | currentTimes <= 0 = replicateAux _xs globalTimes acc
+      | otherwise = replicateAux (x : _xs) (currentTimes - 1) $ x : acc
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+-- Problem 16:
+-- Description:
+--    Drop every N'th element from a list.
+-- Solution:
+drop :: (Eq p, Num p) => [a] -> p -> [a]
+drop xs 0 = xs
+drop xs interval = rev $ dropAux xs interval []
+  where
+    dropAux [] _ acc = acc
+    dropAux (_ : _xs) 1 acc = dropAux _xs interval acc
+    dropAux (x : _xs) counter acc = dropAux _xs (counter - 1) $ x : acc
 
 ----------------------------------------------------------------------------------------------------------------------------------
