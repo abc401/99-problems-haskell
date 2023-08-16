@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wall #-}
 
-module P11To20 (encode, decode, encodeDirect, duplicate, P11To20.replicate, P11To20.drop) where
+module P11To20 (encode, decode, encodeDirect, duplicate, P11To20.replicate, P11To20.drop, split) where
 
 import P1To10 (rev)
 
@@ -105,5 +105,19 @@ drop xs interval = rev $ dropAux xs interval []
     dropAux [] _ acc = acc
     dropAux (_ : _xs) 1 acc = dropAux _xs interval acc
     dropAux (x : _xs) counter acc = dropAux _xs (counter - 1) $ x : acc
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+-- Problem 17:
+-- Description:
+--    Split a list into two parts; The length of the first part is given.
+-- Solution:
+split :: (Eq p, Num p) => [a] -> p -> ([a], [a])
+split xs size = splitAux xs 1 []
+  where
+    splitAux [] _ acc = (rev acc, [])
+    splitAux (x : _xs) currentSize acc
+      | currentSize == size = (rev $ x : acc, _xs)
+      | otherwise = splitAux _xs (currentSize + 1) $ x : acc
 
 ----------------------------------------------------------------------------------------------------------------------------------
