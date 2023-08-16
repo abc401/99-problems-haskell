@@ -1,4 +1,4 @@
-module P11To20 (encode, decode) where
+module P11To20 (encode, decode, encodeDirect) where
 
 import P1To10 (rev)
 
@@ -42,5 +42,23 @@ decode xs = rev $ decodeAux xs []
 
     repeat x 0 acc = acc
     repeat x n acc = repeat x (n - 1) (x : acc)
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+-- Problem 13:
+-- Description:
+--    Run-length encoding of a list (direct solution)
+-- Solution:
+encodeDirect :: Eq a => [a] -> [Rle a]
+encodeDirect [] = []
+encodeDirect (x : xs) = rev $ encodeDirectAux xs (One x) []
+  where
+    encodeDirectAux [] rle acc = rle : acc
+    encodeDirectAux (x : xs) (One x') acc
+      | x == x' = encodeDirectAux xs (Many (2, x')) acc
+      | otherwise = encodeDirectAux xs (One x) $ One x' : acc
+    encodeDirectAux (x : xs) (Many (n, x')) acc
+      | x == x' = encodeDirectAux xs (Many (n + 1, x')) acc
+      | otherwise = encodeDirectAux xs (One x) $ Many (n, x') : acc
 
 ----------------------------------------------------------------------------------------------------------------------------------
