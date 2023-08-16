@@ -20,6 +20,7 @@ module Problems
     split,
     slice,
     rotate,
+    removeAt,
   )
 where
 
@@ -30,7 +31,7 @@ where
 -- Solution:
 last :: [a] -> Maybe a
 last [] = Nothing
--- last [x] = Just x
+last [x] = Just x
 last (_ : xs) = Problems.last xs
 
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -51,7 +52,7 @@ lastTwo (_ : xs) = lastTwo xs
 -- Description:
 --    Find the k'th element of a generic list
 -- Solution:
-at :: Integer -> [a] -> Maybe a
+at :: (Num idx, Ord idx) => idx -> [a] -> Maybe a
 at _ [] = Nothing
 at 1 (x : _) = Just x
 at n (_ : xs)
@@ -64,7 +65,7 @@ at n (_ : xs)
 -- Description:
 --    Find length of a list
 -- Solution:
-length :: [a] -> Integer
+length :: Num length => [a] -> length
 length xs = lengthAux xs 0
   where
     lengthAux (_ : _xs) n = lengthAux _xs (n + 1)
@@ -234,7 +235,7 @@ duplicate xs = rev $ duplicateAux xs []
 -- Description:
 --    Replicate the elements of a list a given number of times.
 -- Solution:
-replicate :: (Ord p, Num p) => [a] -> p -> [a]
+replicate :: (Ord times, Num times) => [a] -> times -> [a]
 replicate xs n = rev $ replicateAux xs n []
   where
     globalTimes = n
@@ -251,7 +252,7 @@ replicate xs n = rev $ replicateAux xs n []
 -- Description:
 --    Drop every N'th element from a list.
 -- Solution:
-drop :: (Eq p, Num p) => [a] -> p -> [a]
+drop :: (Eq interval, Num interval) => [a] -> interval -> [a]
 drop xs 0 = xs
 drop xs interval = rev $ dropAux xs interval []
   where
@@ -265,7 +266,7 @@ drop xs interval = rev $ dropAux xs interval []
 -- Description:
 --    Split a list into two parts; The length of the first part is given.
 -- Solution:
-split :: (Eq p, Num p) => [a] -> p -> ([a], [a])
+split :: (Eq size, Num size) => [a] -> size -> ([a], [a])
 split xs size = splitAux xs 1 []
   where
     splitAux [] _ acc = (rev acc, [])
@@ -279,7 +280,7 @@ split xs size = splitAux xs 1 []
 -- Description:
 --     Extract a slice from a list.
 -- Solution:
-slice :: (Ord p, Num p) => [a] -> p -> p -> [a]
+slice :: (Ord bound, Num bound) => [a] -> bound -> bound -> [a]
 slice xs lowerBound upperBound = rev $ sliceAux xs 0 []
   where
     sliceAux [] _ acc = acc
@@ -302,5 +303,19 @@ rotate xs amount
   where
     lenXS = Problems.length xs
     combine (a, b) = b ++ a
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+-- Problems 20:
+-- Description:
+--    Remove the K'th element from a list.
+-- Solution:
+removeAt :: (Eq index, Num index) => index -> [a] -> [a]
+removeAt idx xs = rev $ removeAtAux idx xs []
+  where
+    removeAtAux _ [] acc = acc
+    removeAtAux _idx (x : _xs) acc
+      | _idx == 0 = removeAtAux (_idx - 1) _xs acc
+      | otherwise = removeAtAux (_idx - 1) _xs $ x : acc
 
 ----------------------------------------------------------------------------------------------------------------------------------
