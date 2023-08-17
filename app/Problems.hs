@@ -24,6 +24,7 @@ module Problems
     insertAt,
     range,
     randSelect,
+    lottoSelect,
   )
 where
 
@@ -369,7 +370,7 @@ randomNumbers bound = map fst $ randomNumbersAux bound
     randomNumbersAux bound' = uniformR (0, bound') (mkStdGen 345) : map (uniformR (0, bound') . snd) (randomNumbersAux bound')
 
 -- Solution:
-randSelect :: (Num t, Ord t) => [a] -> t -> [a]
+randSelect :: (Num amount, Ord amount) => [a] -> amount -> [a]
 randSelect xs n = randSelectAux xs n rnds []
   where
     lenXS = Problems.length xs :: Integer
@@ -380,5 +381,19 @@ randSelect xs n = randSelectAux xs n rnds []
     randSelectAux xs' n' (rnd' : rnds') acc
       | n' <= 0 = acc
       | otherwise = randSelectAux xs' (n' - 1) rnds' $ fromJust (at (rnd' + 1) xs') : acc
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+-- Problem 24:
+-- Description:
+--     Draw N different random numbers from the set 1..M.
+-- Solution:
+lottoSelect :: (Ord n, Num n, Num bound, UniformRange bound) => n -> bound -> [bound]
+lottoSelect n bound = take' n (randomNumbers $ bound - 1) []
+  where
+    take' _ [] acc = acc
+    take' n' (x : xs) acc
+      | n' <= 0 = acc
+      | otherwise = take' (n' - 1) xs $ x + 1 : acc
 
 ----------------------------------------------------------------------------------------------------------------------------------
