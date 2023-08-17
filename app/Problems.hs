@@ -25,6 +25,7 @@ module Problems
     range,
     randSelect,
     lottoSelect,
+    permutation,
   )
 where
 
@@ -40,8 +41,7 @@ last [] = Nothing
 last [x] = Just x
 last (_ : xs) = Problems.last xs
 
-----------------------------------------------------------------------------------------------------------------------------------
--- Problem 2:
+------------------------------------------------------------------------------------------------------------------------------------ Problem 2:
 -- Description:
 --    Find the last two elements of a gerneric list
 -- Solution:
@@ -395,5 +395,35 @@ lottoSelect n bound = take' n (randomNumbers $ bound - 1) []
     take' n' (x : xs) acc
       | n' <= 0 = acc
       | otherwise = take' (n' - 1) xs $ x + 1 : acc
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+-- Problem 25:
+-- Description:
+--    Generate a random permutation of the elements of a list.
+-- Helpers:
+randomNumber :: UniformRange c => (c, c) -> Int -> c
+randomNumber (lowerBound, upperBound) seed = fst . uniformR (lowerBound, upperBound) $ mkStdGen seed
+
+-- Solution:
+permutation :: [a] -> [a]
+permutation xs = permutationAux xs lenXS []
+  where
+    lenXS = Problems.length xs
+
+    permutationAux xs' lenXS' acc
+      | lenXS' <= 0 = acc
+      | otherwise = permutationAux extractedRest (lenXS' - 1) $ extractedX : acc
+      where
+        extracted = extract (randomNumber (0, lenXS' - 1) lenXS') xs'
+        extractedX = fromJust $ fst extracted
+        extractedRest = snd extracted
+
+    extract idx xs' = extractAux idx xs' []
+      where
+        extractAux _ [] acc = (Nothing, acc)
+        extractAux idx' (x' : xs') acc
+          | idx' <= 0 = (Just x', acc ++ xs')
+          | otherwise = extractAux (idx' - 1) xs' $ x' : acc
 
 ----------------------------------------------------------------------------------------------------------------------------------
