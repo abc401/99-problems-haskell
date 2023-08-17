@@ -23,8 +23,12 @@ module Problems
     removeAt,
     insertAt,
     range,
+    randSelect,
   )
 where
+
+import Data.Maybe (fromJust)
+import System.Random (UniformRange, mkStdGen, uniformR)
 
 ------------------------------------------------------------------------------------------------------------------------------------ Problem 1:
 -- Description:
@@ -36,7 +40,6 @@ last [x] = Just x
 last (_ : xs) = Problems.last xs
 
 ----------------------------------------------------------------------------------------------------------------------------------
-
 -- Problem 2:
 -- Description:
 --    Find the last two elements of a gerneric list
@@ -352,5 +355,30 @@ range bound1 bound2 = rangeAux bound1 bound2 []
     rangeAux bound1' bound2' acc
       | bound1' == bound2' - delta = acc
       | otherwise = rangeAux bound1' (bound2' + delta) $ bound2' : acc
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+-- Problem 23:
+-- Description:
+--    Extract a given number of randomly selected elements from a list.
+-- Helpers:
+
+randomNumbers :: (UniformRange b, Num b) => b -> [b]
+randomNumbers bound = map fst $ randomNumbersAux bound
+  where
+    randomNumbersAux bound' = uniformR (0, bound') (mkStdGen 345) : map (uniformR (0, bound') . snd) (randomNumbersAux bound')
+
+-- Solution:
+randSelect :: (Num t, Ord t) => [a] -> t -> [a]
+randSelect xs n = randSelectAux xs n rnds []
+  where
+    lenXS = Problems.length xs :: Integer
+    rnds = randomNumbers $ lenXS - 1
+
+    randSelectAux [] _ _ acc = acc
+    randSelectAux _ _ [] _ = error "Unreachable: Ran out of random numbers!?!?"
+    randSelectAux xs' n' (rnd' : rnds') acc
+      | n' <= 0 = acc
+      | otherwise = randSelectAux xs' (n' - 1) rnds' $ fromJust (at (rnd' + 1) xs') : acc
 
 ----------------------------------------------------------------------------------------------------------------------------------
