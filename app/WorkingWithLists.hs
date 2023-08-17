@@ -1,10 +1,10 @@
 {-# OPTIONS_GHC -Wall #-}
 
-module Problems
-  ( Problems.last,
+module WorkingWithLists
+  ( WorkingWithLists.last,
     lastTwo,
     at,
-    Problems.length,
+    WorkingWithLists.length,
     rev,
     isPalindrome,
     flatten,
@@ -15,8 +15,8 @@ module Problems
     decode,
     encodeDirect,
     duplicate,
-    Problems.replicate,
-    Problems.drop,
+    WorkingWithLists.replicate,
+    WorkingWithLists.drop,
     split,
     slice,
     rotate,
@@ -39,7 +39,7 @@ import System.Random (UniformRange, mkStdGen, uniformR)
 last :: [a] -> Maybe a
 last [] = Nothing
 last [x] = Just x
-last (_ : xs) = Problems.last xs
+last (_ : xs) = WorkingWithLists.last xs
 
 ------------------------------------------------------------------------------------------------------------------------------------ Problem 2:
 -- Description:
@@ -296,22 +296,22 @@ slice xs lowerBound upperBound = rev $ sliceAux xs 0 []
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
--- Problems 19:
+-- Problem 19:
 -- Description:
 --    Rotate a list N places to the left.
 -- Solution:
 rotate :: [a] -> Integer -> [a]
 rotate xs amount
-  | amount > 0 = combine $ Problems.split xs $ amount `mod` lenXS
-  | amount < 0 = combine $ Problems.split xs $ lenXS - (-amount) `mod` lenXS
+  | amount > 0 = combine $ WorkingWithLists.split xs $ amount `mod` lenXS
+  | amount < 0 = combine $ WorkingWithLists.split xs $ lenXS - (-amount) `mod` lenXS
   | otherwise = xs
   where
-    lenXS = Problems.length xs
+    lenXS = WorkingWithLists.length xs
     combine (a, b) = b ++ a
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
--- Problems 20:
+-- Problem 20:
 -- Description:
 --    Remove the K'th element from a list.
 -- Solution:
@@ -373,7 +373,7 @@ randomNumbers bound = map fst $ randomNumbersAux bound
 randSelect :: (Num amount, Ord amount) => [a] -> amount -> [a]
 randSelect xs n = randSelectAux xs n rnds []
   where
-    lenXS = Problems.length xs :: Integer
+    lenXS = WorkingWithLists.length xs :: Integer
     rnds = randomNumbers $ lenXS - 1
 
     randSelectAux [] _ _ acc = acc
@@ -409,7 +409,7 @@ randomNumber (lowerBound, upperBound) seed = fst . uniformR (lowerBound, upperBo
 permutation :: [a] -> [a]
 permutation xs = permutationAux xs lenXS []
   where
-    lenXS = Problems.length xs
+    lenXS = WorkingWithLists.length xs
 
     permutationAux xs' lenXS' acc
       | lenXS' <= 0 = acc
