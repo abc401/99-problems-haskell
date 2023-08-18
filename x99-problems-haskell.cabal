@@ -22,7 +22,7 @@ maintainer:         koibhinheen@gmail.com
 extra-source-files: CHANGELOG.md
 
 library
-    exposed-modules: WorkingWithLists, Arithmatic
+    exposed-modules: WorkingWithLists, Arithmetic
     other-modules:
     build-depends:    base ^>=4.16.4.0, random
     hs-source-dirs:   app
