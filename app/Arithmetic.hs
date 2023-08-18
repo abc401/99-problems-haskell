@@ -1,7 +1,6 @@
-module Arithmetic (isPrime, Arithmetic.gcd) where
+module Arithmetic (isPrime, Arithmetic.gcd, phi) where
 
-----------------------------------------------------------------------------------------------------------------------------------
--- Problem 31
+------------------------------------------------------------------------------------------------------------------------------------ Problem 31
 -- Description:
 --    Determine whether a given integer number is prime.
 -- Solution:
@@ -33,6 +32,24 @@ gcd a b
 --    Determine whether two positive integer numbers are coprime.
 -- Solution:
 coprime :: Integral a => a -> a -> Bool
-coprime a b = Arithmetic.gcd a b == 0
+coprime a b = Arithmetic.gcd a b == 1
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+-- Problem 34:
+-- Description:
+--    Calculate Euler's totient function φ(m).
+-- Solution:
+phi m
+  | m < 1 = error "Phi is undefined for numbers less than 1"
+  | m == 1 = 1
+  | otherwise = phiAux 1 0
+  where
+    phiAux currentlyChecking totalCoprimes
+      | currentlyChecking == m = totalCoprimes
+      | otherwise =
+          if coprime m currentlyChecking
+            then phiAux (currentlyChecking + 1) (totalCoprimes + 1)
+            else phiAux (currentlyChecking + 1) totalCoprimes
 
 ----------------------------------------------------------------------------------------------------------------------------------
