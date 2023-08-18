@@ -20,9 +20,19 @@ isPrime possiblePrime = checkDivisibility 2
 -- Description:
 --    Determine the greatest common divisor of two positive integer numbers.
 -- Solution:
+gcd :: Integral a => a -> a -> a
 gcd a b
   | a < b = if mod b a == 0 then a else Arithmetic.gcd a (b - a)
   | a > b = if mod a b == 0 then b else Arithmetic.gcd (a - b) b
   | otherwise = a
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+-- Problem 33:
+-- Description:
+--    Determine whether two positive integer numbers are coprime.
+-- Solution:
+coprime :: Integral a => a -> a -> Bool
+coprime a b = Arithmetic.gcd a b == 0
 
 ----------------------------------------------------------------------------------------------------------------------------------
